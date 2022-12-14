@@ -1,0 +1,214 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 2362270 */
+  src: url('iconfont.eot?t=1668174854136'); /* IE9 */
+  src: url('iconfont.eot?t=1668174854136#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('iconfont.woff2?t=1668174854136') format('woff2'),
+       url('iconfont.woff?t=1668174854136') format('woff'),
+       url('iconfont.ttf?t=1668174854136') format('truetype'),
+       url('iconfont.svg?t=1668174854136#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-zhongzhi:before {
+  content: "\e60f";
+}
+
+.icon-kaishi_yunhang:before {
+  content: "\e61a";
+}
+
+.icon-084tuichu:before {
+  content: "\e659";
+}
+
+.icon-DeviceMonitor:before {
+  content: "\e608";
+}
+
+.icon-DeviceControl:before {
+  content: "\e609";
+}
+
+.icon-HistoricRecords:before {
+  content: "\e60a";
+}
+
+.icon-MonitorLog:before {
+  content: "\e60d";
+}
+
+.icon-AirAlert:before {
+  content: "\e60e";
+}
+
+.icon-chenggong1:before {
+  content: "\e61c";
+}
+
+.icon-caution:before {
+  content: "\e65c";
+}
+
+.icon-cuowu:before {
+  content: "\e776";
+}
+
+.icon-xiazai:before {
+  content: "\e6cd";
+}
+
+.icon-guanbi:before {
+  content: "\eaf2";
+}
+
+.icon-fanhui:before {
+  content: "\e641";
+}
+
+.icon-houtaiguanli-houtaiguanli:before {
+  content: "\e636";
+}
+
+.icon-jian:before {
+  content: "\e626";
+}
+
+.icon-tianjia:before {
+  content: "\e62a";
+}
+
+.icon-chenggong:before {
+  content: "\e62f";
+}
+
+.icon-sousuo:before {
+  content: "\e6d9";
+}
+
+.icon-mima:before {
+  content: "\e62d";
+}
+
+.icon-yonghu1:before {
+  content: "\e660";
+}
+
+.icon-shangchuan:before {
+  content: "\e625";
+}
+
+.icon-shuaxin:before {
+  content: "\ec08";
+}
+
+.icon-24gf-portraitMale:before {
+  content: "\eb29";
+}
+
+.icon-ic_image_upload_mult:before {
+  content: "\e60b";
+}
+
+.icon-wenjian:before {
+  content: "\e601";
+}
+
+.icon-rili:before {
+  content: "\e616";
+}
+
+.icon-jiankong3:before {
+  content: "\e6c5";
+}
+
+.icon-shouji:before {
+  content: "\eac3";
+}
+
+.icon-zhengque:before {
+  content: "\e665";
+}
+
+.icon-31fanhui1:before {
+  content: "\e600";
+}
+
+.icon-gerenzhongxin:before {
+  content: "\e643";
+}
+
+.icon-heimingdan:before {
+  content: "\e633";
+}
+
+.icon-xiaoxi:before {
+  content: "\e6eb";
+}
+
+.icon-renwu:before {
+  content: "\e656";
+}
+
+.icon-shishijiankong:before {
+  content: "\e613";
+}
+
+.icon-shouye2x:before {
+  content: "\e642";
+}
+
+.icon-zhuapai:before {
+  content: "\e630";
+}
+
+.icon-yanjing:before {
+  content: "\e763";
+}
+
+.icon-Airship:before {
+  content: "\e603";
+}
+
+.icon-DeltaWing:before {
+  content: "\e604";
+}
+
+.icon-Paraglider:before {
+  content: "\e607";
+}
+
+.icon-zuojiantou:before {
+  content: "\e61f";
+}
+
+.icon-youjiantou:before {
+  content: "\e69a";
+}
+
+.icon-yonghu:before {
+  content: "\e638";
+}
+
+.icon-xinmima:before {
+  content: "\e60c";
+}
+
+.icon-a-jiantou1:before {
+  content: "\e605";
+}
+
+.icon-jiantou:before {
+  content: "\e699";
+}
+
+.icon-tuichu:before {
+  content: "\e606";
+}
+

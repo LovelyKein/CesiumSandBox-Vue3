@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100vh;">
+  <head style="width: 100%;height: 100vh;background-color: black;">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+    <title>3D Tiles-OSM Building</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      #cesium_container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body style="width: 100%;height: 100%;">
+    <div id="cesium_container"></div>
+    <script>
+      // window.CESIUM_BASE_URL = "/Cesium/"; // 设置 Cesium 静态资源基本路径
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYjkyZWNjNC00NmVkLTQ3OTktOTUwOC0yODlmNjMxOTRjZjQiLCJpZCI6MTA4OTA1LCJpYXQiOjE2NjM4NDc3NTl9.D-ndvVOBsHIBY0doIFl4yJmr5iTE7ZEDLkZrZ4kMI9s";
+
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+        89.5, // 西经
+        20.4, // 南纬
+        110.4, // 东经
+        61.2 // 北纬
+      );
+
+      const viewer = new Cesium.Viewer("cesium_container", {
+        geocoder: false,
+        homeButton: true,
+        infoBox: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+        navigationHelpButton: false,
+        animation: false,
+        timeline: false,
+        fullscreenButton: true,
+        vrButton: false,
+        scene3DOnly: true,
+      });
+      viewer.cesiumWidget.creditContainer.style.display = "none";
+
+      // OSM 建筑数据（Cesium 官方）
+      const tilesOsm = new Cesium.createOsmBuildings()
+        viewer.scene.primitives.add(tilesOsm)
+
+        // console.log(tilesOsm, 'tilesOsm')
+
+        // 位置
+        const gzPositon = Cesium.Cartesian3.fromDegrees(116.391228, 39.916604, 1000)
+        viewer.camera.flyTo({
+          destination: gzPositon,
+          duration: 2
+        })
+
+        // 1. 根据 建筑类型 更改颜色
+        tilesOsm.style = new Cesium.Cesium3DTileStyle({
+          // color: "color('yellow')", // 颜色设置：颜色名称/16进制色值/rgba色值
+          // color: "color('#ff0000')",
+          // color: 'rgba(255, 255, 100, 0.8)',
+
+          // 根据条件设置颜色
+          color: {
+            // 条件设置
+            conditions: [
+              ['${feature["building"]} === "apartments"', 'color("rgba(50, 255, 0, 0.8)")'], // 特征中的建筑类型 === 'apartments'显示的颜色
+              ['${feature["building"]} === "commercial"', 'color("rgba(50, 50, 255, 0.8)")'], // 特征中的建筑类型 === 'commercial'显示的颜色
+              ['true', 'color("white")']
+            ]
+          },
+
+          show: true
+        })
+
+        // 2. 根据 距离某点的距离 更改颜色
+        // tilesOsm.style = new Cesium.Cesium3DTileStyle({
+        //   // 定义可被当作条件的属性
+        //   defines: {
+        //     distance: "distance(vec2(${feature['cesium#longitude']},${feature['cesium#latitude']}), vec2(113.31915, 23.10902))" // 计算距离 广东塔 的距离
+        //   },
+        //   color: {
+        //     // 条件设置
+        //     conditions: [
+        //       ["${distance} < 0.05", "color('rgba(0, 0, 50, 0.6)')"],
+        //       ["${distance} < 0.1", "color('rgba(150, 0, 50, 0.4)')"],
+        //       ['true', "color('white')"]
+        //     ]
+        //   },
+        //   // 根据条件是否显示
+        //   // show: '${feature["building"]} === "commercial"'
+        //   show: true
+        // })
+    </script>
+  </body>
+</html>

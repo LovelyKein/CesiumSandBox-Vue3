@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100vh;">
+  <head style="width: 100%;height: 100vh;background-color: black;">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+    <title>实体材质</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      #cesium_container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body style="width: 100%;height: 100%;">
+    <div id="cesium_container"></div>
+    <script>
+      // window.CESIUM_BASE_URL = "/Cesium/"; // 设置 Cesium 静态资源基本路径
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYjkyZWNjNC00NmVkLTQ3OTktOTUwOC0yODlmNjMxOTRjZjQiLCJpZCI6MTA4OTA1LCJpYXQiOjE2NjM4NDc3NTl9.D-ndvVOBsHIBY0doIFl4yJmr5iTE7ZEDLkZrZ4kMI9s";
+
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+        89.5, // 西经
+        20.4, // 南纬
+        110.4, // 东经
+        61.2 // 北纬
+      );
+
+      const viewer = new Cesium.Viewer("cesium_container", {
+        geocoder: false,
+        homeButton: true,
+        infoBox: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+        navigationHelpButton: false,
+        animation: false,
+        timeline: false,
+        fullscreenButton: true,
+        vrButton: false,
+        scene3DOnly: true,
+      });
+      viewer.cesiumWidget.creditContainer.style.display = "none";
+
+      // 实体材质
+      const geometry = viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(116.0, 40.0, 1000),
+        ellipse: {
+          semiMinorAxis: 400000.0,
+          semiMajorAxis: 400000.0,
+          material: Cesium.Color.BLUE.withAlpha(0.8),
+        },
+      });
+
+      // 图片材质
+      geometry.ellipse.material = '/imgs/clound.png'; // 外部改变 几何体 的材质
+
+      // 棋盘双色材质
+      // geometry.ellipse.material = new Cesium.CheckerboardMaterialProperty({
+      //   evenColor: Cesium.Color.WHITE, // 偶数 棋格的颜色
+      //   oddColor: Cesium.Color.BLACK.withAlpha(0.5), // 奇数 棋格的颜色
+      //   repeat: new Cesium.Cartesian2(2, 2) // 色块重复的次数
+      // });
+
+      // 条纹材质
+      // geometry.ellipse.material = new Cesium.StripeMaterialProperty({
+      //   evenColor: Cesium.Color.WHITE, // 偶数行 颜色
+      //   oddColor: Cesium.Color.BLACK, // 奇数行 颜色
+      //   repeat: 8 // 重复行数
+      // });
+
+      // 网格材质
+      // geometry.ellipse.material = new Cesium.GridMaterialProperty({
+      //   color: Cesium.Color.YELLOW,
+      //   cellAlpha: 0.2, // 网格的透明度
+      //   lineCount: new Cesium.Cartesian2(4, 8), // 水平、垂直 方向上的网格线的 数量
+      //   lineThickness: new Cesium.Cartesian2(6.0, 2.0) // 水平、垂直 方向上的网格线的 宽度
+      // });
+
+      // outline，无填充材质
+      // geometry.ellipse.fill = false; // 关闭填充
+      // geometry.ellipse.outline = true; // 开启轮廓线
+      // geometry.ellipse.outlineColor = Cesium.Color.YELLOW; // 轮廓线的颜色
+      // geometry.ellipse.outlineWidth = 2.0; // 轮廓线的宽度
+
+      // 视角设置为 geometry 的位置
+      viewer.zoomTo(geometry);
+    </script>
+  </body>
+</html>

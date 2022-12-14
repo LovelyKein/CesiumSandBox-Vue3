@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100vh;">
+  <head style="width: 100%;height: 100vh;background-color: black;">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+    <title>Primitive-合并多个实例</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      #cesium_container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body style="width: 100%;height: 100%;">
+    <div id="cesium_container"></div>
+    <script>
+      // window.CESIUM_BASE_URL = "/Cesium/"; // 设置 Cesium 静态资源基本路径
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYjkyZWNjNC00NmVkLTQ3OTktOTUwOC0yODlmNjMxOTRjZjQiLCJpZCI6MTA4OTA1LCJpYXQiOjE2NjM4NDc3NTl9.D-ndvVOBsHIBY0doIFl4yJmr5iTE7ZEDLkZrZ4kMI9s";
+
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+        89.5, // 西经
+        20.4, // 南纬
+        110.4, // 东经
+        61.2 // 北纬
+      );
+
+      const viewer = new Cesium.Viewer("cesium_container", {
+        geocoder: false,
+        homeButton: true,
+        infoBox: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+        navigationHelpButton: false,
+        animation: false,
+        timeline: false,
+        fullscreenButton: true,
+        vrButton: false,
+        scene3DOnly: true,
+      });
+      viewer.cesiumWidget.creditContainer.style.display = "none";
+
+      const geometry_1 = new Cesium.RectangleGeometry({
+        rectangle: Cesium.Rectangle.fromDegrees(
+          115, // 西经
+          20, // 南纬
+          135, // 东经
+          30 // 北纬
+        ),
+        height: 20000, // 高度（为 0 时，贴在地面上）
+        extrudedHeight: 5000, // 挤压高度
+        vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+      })
+      const geometry_2 = new Cesium.RectangleGeometry({
+        rectangle: Cesium.Rectangle.fromDegrees(
+          140, // 西经
+          20, // 南纬
+          160, // 东经
+          30 // 北纬
+        ),
+        height: 10000, // 高度（为 0 时，贴在地面上）
+        extrudedHeight: 20000, // 挤压高度
+        vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+      })
+
+      const instance_1 = new Cesium.GeometryInstance({
+        geometry: geometry_1, // 指定要被实例化的 几何体模型
+        modelMatrix: Cesium.Matrix4.IDENTITY,
+        // 实例的属性
+        attributes: {
+          color: new Cesium.ColorGeometryInstanceAttribute(1.0, 0, 0, 0.8)
+        },
+        id: 'rectangle_1' // 实例的唯一标识，可以通过 id 获取实例的属性
+      })
+      const instance_2 = new Cesium.GeometryInstance({
+        geometry: geometry_2,
+        modelMatrix: Cesium.Matrix4.IDENTITY,
+        // 实例的属性
+        attributes: {
+          color: new Cesium.ColorGeometryInstanceAttribute(0, 0, 1.0, 0.8)
+        },
+        id: 'rectangle_2'
+      })
+
+      const appearance = new Cesium.PerInstanceColorAppearance({
+        flat: true
+      }) // 使用实例中的外观颜色
+
+      const pixelModel = new Cesium.Primitive({
+        geometryInstances: [instance_1, instance_2],
+        appearance
+      })
+
+      viewer.scene.primitives.add(pixelModel)
+
+      // 动态更改颜色
+      setInterval(() => {
+        const rectangleAttribute = pixelModel.getGeometryInstanceAttributes('rectangle_1')
+        console.log(rectangleAttribute)
+        // 重新设置颜色
+        rectangleAttribute.color = Cesium.ColorGeometryInstanceAttribute.toValue(
+          Cesium.Color.fromRandom({
+            red: 0.8, // 如果指定该属性，则使用该值代替 红色随机值
+            minimumRed: 0.2,
+            maximumRed: 1.0,
+            minimumGreen: 0.2,
+            maximumGreen: 1.0,
+            minimumBlue: 0.2,
+            maximumBlue: 1.0,
+            minimumAlpha: 0.3,
+            maximumAlpha: 0.9
+          })
+        )
+      }, 3000)
+    </script>
+  </body>
+</html>

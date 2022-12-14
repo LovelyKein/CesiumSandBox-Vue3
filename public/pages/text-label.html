@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100vh;">
+  <head style="width: 100%;height: 100vh;background-color: black;">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+    <title>几何-文字标签</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      #cesium_container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body style="width: 100%;height: 100%;">
+    <!-- 地图容器 -->
+    <div id="cesium_container"></div>
+    <script>
+      // window.CESIUM_BASE_URL = "/Cesium/"; // 设置 Cesium 静态资源基本路径
+      // 设置 cesium token
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYjkyZWNjNC00NmVkLTQ3OTktOTUwOC0yODlmNjMxOTRjZjQiLCJpZCI6MTA4OTA1LCJpYXQiOjE2NjM4NDc3NTl9.D-ndvVOBsHIBY0doIFl4yJmr5iTE7ZEDLkZrZ4kMI9s";
+
+      // 设置 Cesium 初始化时的默认位置视角（中国大陆）
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+        89.5, // 西经
+        20.4, // 南纬
+        110.4, // 东经
+        61.2 // 北纬
+      );
+
+      const viewer = new Cesium.Viewer("cesium_container", {
+        geocoder: false, // 是否创建 搜索 组件按钮
+        homeButton: true, // 是否创建 home 组件按钮
+        infoBox: false, // 关闭信息窗口，解决控制台报错
+        sceneModePicker: false, // 是否创建 视角模式 组件按钮
+        baseLayerPicker: false, // 是否创建 图层选择 组件按钮
+        navigationHelpButton: false, // 是否创建 操作帮助 组件按钮
+        animation: false, // 是否创建 动画 组件
+        timeline: false, // 是否创建 时间轴 组件
+        fullscreenButton: true, // 是否创建 全屏 组件按钮
+        vrButton: false, // 是否创建 VR模式 组件按钮
+        scene3DOnly: true, // 是否只显示 3D 视角
+      });
+      viewer.cesiumWidget.creditContainer.style.display = "none"; // 去掉 logo 水印
+
+      // 文字标签
+      const label = viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(116.391228, 39.916604, 100), // 位置
+        // 文字
+        label: {
+          text: '天安门', // 文字内容
+          font: '14px sans-serif', // 字体及大小
+          fillColor: Cesium.Color.WHITE, // 填充色
+          outlineColor: Cesium.Color.BLACK, // 边框色
+          outlineWidth: 4, // 边框宽度
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE, // FILL：填充文字；OUTLINE：勾勒标签；FILL_AND_OUTLINE：填充并勾勒标签
+          pixelOffset: new Cesium.Cartesian2(0, -45), // 文字偏移量
+          horizontalOrigin: Cesium.HorizontalOrigin.CENTER, // 水平显示位置
+          verticalOrigin: Cesium.VerticalOrigin.TOP, // 垂直显示位置
+        },
+        // 广告牌/介绍
+        billboard: {
+          image: '/imgs/tam.png', // 图片地址
+          width: 40, // 宽度
+          height: 40, // 高度
+          horizontalOrigin: Cesium.HorizontalOrigin.CENTER, // 水平对齐
+          verticalOrigin: Cesium.VerticalOrigin.CENTER, // 垂直对齐
+        }
+      })
+      viewer.trackedEntity = label
+    </script>
+  </body>
+</html>

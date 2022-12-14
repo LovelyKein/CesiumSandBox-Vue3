@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100vh;">
+  <head style="width: 100%;height: 100vh;background-color: black;">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+    <title>Primitive 基本类</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      #cesium_container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body style="width: 100%;height: 100%;">
+    <div id="cesium_container"></div>
+    <script>
+      // window.CESIUM_BASE_URL = "/Cesium/"; // 设置 Cesium 静态资源基本路径
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYjkyZWNjNC00NmVkLTQ3OTktOTUwOC0yODlmNjMxOTRjZjQiLCJpZCI6MTA4OTA1LCJpYXQiOjE2NjM4NDc3NTl9.D-ndvVOBsHIBY0doIFl4yJmr5iTE7ZEDLkZrZ4kMI9s";
+
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+        89.5, // 西经
+        20.4, // 南纬
+        110.4, // 东经
+        61.2 // 北纬
+      );
+
+      const viewer = new Cesium.Viewer("cesium_container", {
+        geocoder: false,
+        homeButton: true,
+        infoBox: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+        navigationHelpButton: false,
+        animation: false,
+        timeline: false,
+        fullscreenButton: true,
+        vrButton: false,
+        scene3DOnly: true,
+      });
+      viewer.cesiumWidget.creditContainer.style.display = "none";
+
+      // Primitive 比 Entity 更接近底层，封装度没有 Entity 高，具有更高的自由度，更接近于 ThreeJS 创建几何模型的方式
+
+      // 1. 创建 几何体模型（矩形）
+      const geometry = new Cesium.RectangleGeometry({
+        rectangle: Cesium.Rectangle.fromDegrees(
+          110, // 西经
+          20, // 南纬
+          130, // 东经
+          40 // 北纬
+        ),
+        height: 10000, // 高度（为 0 时，贴在地面上）
+        extrudedHeight: 20000, // 挤压高度
+        vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+      })
+
+      // 2. 创建 几何体实例
+      const instance = new Cesium.GeometryInstance({
+        geometry, // 指定要被实例化的 几何体模型
+        modelMatrix: Cesium.Matrix4.IDENTITY, // 将几何图形从模型转换为世界坐标的模型矩阵: 单位矩阵
+        // 实例的属性
+        attributes: {
+          // 颜色
+          // color: Cesium.ColorGeometryInstanceAttribute.fromColor(
+          //   Cesium.Color.RED.withAlpha(0.8) // 通过 Color 对象 创建一个实例的颜色属性
+          // )
+          color: new Cesium.ColorGeometryInstanceAttribute(1.0, 0, 0, 0.8) // 效果与上面一致
+        },
+        id: 'rectangle'
+      })
+
+      // 3. 设置 primitive 类型的外观和材质
+      let appearance
+
+      // 使用 instance 实例上的 颜色去着色
+      // appearance = new Cesium.PerInstanceColorAppearance({
+      //   flat: true // 片段着色器中使用平面着色，此时不会考虑光照效果，默认为 false
+      // })
+
+      // 椭球体表面外观
+      // 假定 几何体 与 地球椭球体是平行的，会在计算大量的顶点属性时节省内存
+      appearance = new Cesium.EllipsoidSurfaceAppearance({
+        flat: false,
+        faceForward: false, // 为 true 时，片段着色器会根据需要正常翻转表面，避免光照背面产生黑点
+        translucent: true, // 为 true 时，几何形状将显示半透明效果
+        aboveGround: false,
+        // 用于确定片段颜色的材料
+        material: new Cesium.Material.fromType('Color', {
+          color: Cesium.Color.AQUA.withAlpha(0.7)
+        })
+      })
+
+      // 外观基类 MaterialAppearance
+      // appearance = new Cesium.MaterialAppearance({
+      //   material: new Cesium.Material.fromType('Color', {
+      //     color: Cesium.Color.WHITE.withAlpha(0.8)
+      //   })
+      // })
+
+      // 4. 图元装配
+      const pixelModel = new Cesium.Primitive({
+        geometryInstances: instance, // 允许接收多个实例，用数组包裹: [instance_1, instance_2, ...]
+        appearance
+      })
+
+      // 5. 添加到场景中
+      viewer.scene.primitives.add(pixelModel)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100vh;">
+  <head style="width: 100%;height: 100vh;background-color: black;">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Cesium.js"></script>
+    <title>鼠标点击获取实例</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+      #cesium_container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body style="width: 100%;height: 100%;">
+    <div id="cesium_container"></div>
+    <script>
+      // window.CESIUM_BASE_URL = "/Cesium/"; // 设置 Cesium 静态资源基本路径
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjYjkyZWNjNC00NmVkLTQ3OTktOTUwOC0yODlmNjMxOTRjZjQiLCJpZCI6MTA4OTA1LCJpYXQiOjE2NjM4NDc3NTl9.D-ndvVOBsHIBY0doIFl4yJmr5iTE7ZEDLkZrZ4kMI9s";
+
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+        89.5, // 西经
+        20.4, // 南纬
+        110.4, // 东经
+        61.2 // 北纬
+      );
+
+      const viewer = new Cesium.Viewer("cesium_container", {
+        geocoder: false,
+        homeButton: true,
+        infoBox: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+        navigationHelpButton: false,
+        animation: false,
+        timeline: false,
+        fullscreenButton: true,
+        vrButton: false,
+        scene3DOnly: true,
+      });
+      viewer.cesiumWidget.creditContainer.style.display = "none";
+
+      const geometry = new Cesium.RectangleGeometry({
+        rectangle: Cesium.Rectangle.fromDegrees(
+          115, // 西经
+          25, // 南纬
+          135, // 东经
+          35 // 北纬
+        ),
+        height: 10000,
+        extrudedHeight: 20000,
+        // PerInstanceColorAppearance 要于下方外观类一致
+        vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+      });
+      // 实例
+      const instance = new Cesium.GeometryInstance({
+        geometry, // 指定要被实例化的 几何体模型
+        modelMatrix: Cesium.Matrix4.IDENTITY,
+        // 实例的属性
+        attributes: {
+          // 颜色
+          color: Cesium.ColorGeometryInstanceAttribute.fromColor(
+            Cesium.Color.RED.withAlpha(0.8)
+          ),
+        },
+        id: "rectangle",
+      });
+      // 外观
+      const appearance = new Cesium.PerInstanceColorAppearance({
+        flat: true,
+      });
+      // 图元装配
+      const pixelModel = new Cesium.Primitive({
+        geometryInstances: instance,
+        appearance,
+      });
+      viewer.scene.primitives.add(pixelModel);
+
+      // 创建 屏幕事件对象
+      const eventHandler = new Cesium.ScreenSpaceEventHandler(
+        viewer.scene.canvas // 画布
+      );
+      // 监听事件动作: setInputAction(事件动作回调函数, 事件类型)
+      eventHandler.setInputAction((movement) => {
+        // console.log(movement)
+        const pickObject = viewer.scene.pick(movement.position);
+        if (Cesium.defined(pickObject)) {
+          // console.log(pickObject)
+          const rectangleAttribute = pixelModel.getGeometryInstanceAttributes(
+            pickObject.id
+          ); // 通过 id 获取 实例
+          // 重新设置颜色
+          rectangleAttribute.color =
+            Cesium.ColorGeometryInstanceAttribute.toValue(
+              Cesium.Color.YELLOW.withAlpha(0.7)
+            );
+        }
+      }, Cesium.ScreenSpaceEventType.LEFT_CLICK); // 监听的是 鼠标左键单击 事件
+    </script>
+  </body>
+</html>
